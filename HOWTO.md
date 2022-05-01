@@ -88,7 +88,7 @@ Now go create a script in Jamf Pro. This can be found under Settings > Computer 
 - Use the Script pane to paste in our compliance script “cis_lvl2_puck_compliance.sh".
 - Use the Options pane to set the Parameter 4 label to `Options (--check, --fix, --stats, --compliant, --non_compliant)`.
 
-<img src="https://github.com/Honestpuck/NIST-HOWTO/blob/main/script.png" width="400">
+<img src="https://github.com/Honestpuck/NIST-HOWTO/blob/main/script.png" width="600">
 
 ##### More Pieces
 
