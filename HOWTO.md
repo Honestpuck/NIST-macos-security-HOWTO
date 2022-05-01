@@ -87,7 +87,8 @@ Now go create a script in Jamf Pro. This can be found under Settings > Computer 
  - Use the General pane to configure basic settings for the script, including the display name and assign to our previously created category.
 - Use the Script pane to paste in our compliance script “cis_lvl2_puck_compliance.sh".
 - Use the Options pane to set the Parameter 4 label to `Options (--check, --fix, --stats, --compliant, --non_compliant)`.
-<img align="right" src="https://script.png" width="400">
+
+<img align="left" src="https://./script.png" width="400">
 
 ##### More Pieces
 
