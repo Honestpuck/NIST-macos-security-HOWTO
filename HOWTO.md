@@ -1,7 +1,7 @@
 
 ### How To Incorporate the 'macOS Security Compliance Project' Into Jamf Pro
 
-In this document I will elaborate how to use the NIST tool chain using the CIS level 2 benchmark. You can find the tools at `https://github.com/usnistgov/macos_security`. The method will work with any other baseline in the project, just replace `cis_lvl2` everywhere below with the name of the baseline you want to use.
+In this document I will show how to use the NIST tool chain with the CIS level 2 benchmark. You can find the tools at `https://github.com/usnistgov/macos_security`. The method will work with any other baseline in the project, just replace `cis_lvl2` everywhere below with the name of the baseline you want to use.
 
 #### Grab the Tools
 
@@ -9,7 +9,7 @@ Go in to whatever directory you store your git repositories and `git clone git@g
 
 #### Before You Build
 
-To do this properly you should communicate with your Security team exactly what you are doing. The first step therefore is to print the entire set of security rules for the benchmark. To do this you need to create the PDF by running the guidance script on the base YAML file. Go into the top level of the repo and ...
+To do this properly you should communicate with your Security team exactly what you are doing. The first step is to print the entire set of security rules in the benchmark. To do this you create a PDF by running the guidance script on the base YAML file. Go into the top level of the repo and ...
 ```
 ~/macos_security $ ./scripts/generate_guidance.py baselines/cis_lvl2.yaml
 ```
@@ -22,7 +22,7 @@ Generating PDF file from AsciiDoc...
 ```
 Now there will be a PDF file in `build/cis_lvl2` called `cis_lvl2.pdf`
 
-Go through this file and write down the rule number and title for all the rules you don't think are needed in your organisation. At my company we decided "7.21 Enable Show All Filename Extensions" would confuse users.
+Go through this file and write down the rule number and title for all the rules you don't think are needed in your organisation. At my company we decided "7.21 Enable Show All Filename Extensions" would confuse users. There may be others, CIS level 2 is a tight benchmark.
 
 Take this list and the PDF file and get Security to check if they are fine with your changes to the baseline.
 
@@ -87,35 +87,36 @@ Now go create a script in Jamf Pro. This can be found under Settings > Computer 
  - Use the General pane to configure basic settings for the script, including the display name and assign to our previously created category.
 - Use the Script pane to paste in our compliance script “cis_lvl2_puck_compliance.sh".
 - Use the Options pane to set the Parameter 4 label to `Options (--check, --fix, --stats, --compliant, --non_compliant)`.
-
-<img src="https://github.com/Honestpuck/NIST-HOWTO/blob/main/script.png" "The Options pane of our script" width="600">
-
-!(./script.png)
-
+##### _The 'Options' pane of our script_
+![Script](script.png =600x)
 ##### More Pieces
 
-Next we create  two Extension Attributes in Jamf Pro, one to count the non-compliant rules and one to list them. This can be found under Settings > Computer Management. In the “Computer Management–Management Framework” section, click Extension Attributes  > New.
+Next we create two Extension Attributes in Jamf Pro, one to count the non-compliant rules and one to list them. This can be found under Settings > Computer Management. In the “Computer Management–Management Framework” section, click Extension Attributes  > New.
+
 - Set the Data type to String
 - Set the Input type to Script
-- Paste the script section in the editor and save
-
+- Paste into the script section in the editor and save
 ```
 #!/bin/zsh
 
 # cis v2 - Audit List
 
 echo "<result>"
-/usr/libexec/PlistBuddy -c "Print" /Library/Preferences/org.cis_lvl2_suncorp.audit.plist | grep -B 1 "finding = true"
+/usr/libexec/PlistBuddy -c "Print" /Library/Preferences/org.cis_lvl2_puck.audit.plist |\
+ grep -B 1 "finding = true"`
 echo "</result>"
 ```
-
+- Set the Data type to Integer
+- Set the Input type to Script
+- Paste the script section in the editor and save
 ```
 #!/bin/zsh
 
 # cis v2 - Audit Count
 
 echo "<result>"
-/usr/libexec/PlistBuddy -c "Print" /Library/Preferences/org.cis_lvl2_suncorp.audit.plist | grep -c "finding = true"
+/usr/libexec/PlistBuddy -c "Print" /Library/Preferences/org.cis_lvl2_puck.audit.plist |\
+  grep -c "finding = true"
 echo "</result>"
 ```
 
@@ -127,9 +128,9 @@ Now for a Smart Group that looks at the audit count.
 
 ##### Policies
 
-We want three policies. The first one run is "CISv2 Fix". It runs at enrollment complete and with a custom trigger of `cis_fix`. Then we have "CISv2 Check" which runs at Check-in and has a custom trigger of `cis_check`.
+We want three policies. The first one run is "CISv2 Fix". It runs at enrollment complete and with a custom trigger of `cis_fix`. Then we have "CISv2 Check" which runs at Check-in and has a custom trigger of `cis_check`. These two policies run the compliance script. One with `--check` in the options while the other has `--fix`
 
-Our final policy, "CISv2 Fix Controller", runs at Check-in and is scoped to "CIS v2 Non-compliant. This policy runs a script:
+Our final policy, "CISv2 Fix Controller", runs at Check-in and is scoped to "CIS v2 Non-compliant". This policy runs a script:
 ```
  #!/bin/zsh
 
@@ -137,7 +138,7 @@ Our final policy, "CISv2 Fix Controller", runs at Check-in and is scoped to "CIS
 
 # write to fix log
 echo $(date) >> /Library/Management/cisfixlog.txt
-/usr/libexec/PlistBuddy -c "Print" /Library/Preferences/org.cis_lvl2_suncorp.audit.plist | \
+/usr/libexec/PlistBuddy -c "Print" /Library/Preferences/org.cis_lvl2_puck.audit.plist | \
 	grep -B 1 "finding = true" ) >> /Library/Management/cisfixlog.txt
     
 # do the fix
@@ -150,17 +151,20 @@ jamf policy -event cis_check
 jamf recon
 ```
 
+In my SOE I use `/Library/Management` as a place for all the bits and pieces I use such as the  company logo. If you use a different spot use that.
+
 The first half of the script logs the date and a list of the non-compliant rules to a text file. We can read `/Library/Management/cisfixlog.txt` in an EA if we want. Having this makes security happy as you are logging every breach.
 
-The second half is running `jamf` three times. You can see that we run the remediation, then run the check again. The second check *should* pick up that the Mac is now compliant and write that out to our audit plist. Now a `jamf recon` will update our two EAs by making them run again. That means the Mac is no longer a member of our smart group.
+The second half is running `jamf` three times. You can see that we run the remediation, then run the check again. This check *should* pick up that the Mac is now compliant and write that out to our audit plist. Now a `jamf recon` will update our two EAs by making them run again. That means the Mac is no longer a member of our smart group.
+##### Testing
 
 For preliminary testing I turn on Self Service for the three policies. I also edit any other security policies and set them to exclude our test group, we want to be sure we get a clean test.
 
-##### Testing
-
 To do our testing we want a rule that is easily broken and just as easily fixed but doesn't constitute a large breach of security. "Disable Root Login" is the perfect candidate. `/usr/bin/dscl . -create /Users/root UserShell /bin/zsh` will break it and the remediation done by our system is a single line `/usr/bin/dscl . -create /Users/root UserShell /usr/bin/false`.
 
-One hiccup in testing is that the policy log is only written after a policy completes so even though "CISv2 Fix Control" runs first, it will be third in the policy log after "CISv2 Fix" and "CISv2 Check".
+One note in testing is that the policy log is only written after a policy completes so even though "CISv2 Fix Control" runs first it will be above "CISv2 Fix" and "CISv2 Check" in the Policy Log.
+
+Once you have got it working by running the policies via self service in your test instance find some volunteers to run the system in production to make sure you're not breaking something with all the new security rules. If you are then figure out which rule it is and go back to Security.
 
 ##### Caveat
 
@@ -168,7 +172,11 @@ In our organisation we use FileVault (as everyone should). This causes a problem
 
 ##### What About That Preference File?
 
-What file? Oh, *that* preference file. That is `org.cis_lvl2_puck.audit.plist` and it is for special cases. It has a list of all the rules and a key `exempt` which is false unless we want to exempt that rule where we change the key to true. Here is what a rule looks like:
+What file? Oh, *that* preference file. That is the file `org.cis_lvl2_puck.audit.plist`. Before we go too far let me point out that when you have the system all installed and running you will have **two** files with the same name. One in `/Library/Preferences` which holds the **output** of the compliance script and one in `/Library/ManagedPreferences` which will be the preference file **for** the compliance script.
+
+It is the second one we are talking about now.
+
+This preference file is for 'special cases'. It has a list of all the rules and a key `exempt` which is false unless we want to exempt that rule where we change the key to true. Here is what a rule looks like:
 ```
 	<key>sysprefs_automatic_login_disable</key>
 	<dict>
@@ -177,4 +185,4 @@ What file? Oh, *that* preference file. That is `org.cis_lvl2_puck.audit.plist` a
 	</dict>
 ```
 
-What if we had a number of Mac Minis used as an XCode build cluster. You might want them to power up and log in automatically after a power outage. So we put change that `<false/>` to `<true/>` and we upload the preference file exactly the same way we did other preferences. Then scope that preference file to the build Minis. I would give it a name that told us what it was for such as "Build Minis Allow Auto Login"
+What if we had a number of Mac Minis used as an XCode build cluster. They're hiding in a server room without monitors or keyboards so it might be safe to power them up and log in automatically after a power outage. So we change that `<false/>` to `<true/>` and upload the preference file exactly the same way we did other config profiles. Scope that preference file to the build Minis and we have handled our 'special case'
