@@ -1,7 +1,7 @@
 
 ### How To Incorporate the 'macOS Security Compliance Project' Into Jamf Pro
 
-In this document I will show how to use the NIST tool chain with the CIS level 2 benchmark. You can find the tools at `https://github.com/usnistgov/macos_security`. The method will work with any other baseline in the project, just replace `cis_lvl2` everywhere below with the name of the baseline you want to use.
+In this document I will show how to use the NIST tool chain with the CIS level 2 benchmark. You can find the tools at `https://github.com/usnistgov/macos_security`. The method will work with any other baseline in the project, just replace `cis_lvl2` everywhere below with the name of the baseline you want to use . (At the moment there is a problem with GitHub displaying some of the images. Apologies, it's being worked on now.
 
 #### Grab the Tools
 
