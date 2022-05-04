@@ -88,7 +88,7 @@ Now go create a script in Jamf Pro. This can be found under Settings > Computer 
 - Use the Script pane to paste in our compliance script “cis_lvl2_puck_compliance.sh".
 - Use the Options pane to set the Parameter 4 label to `Options (--check, --fix, --stats, --compliant, --non_compliant)`.
 ##### _The 'Options' pane of our script_
-![Script](script.png =600x)
+![Compliance Script](script.png =600x)
 ##### More Pieces
 
 Next we create two Extension Attributes in Jamf Pro, one to count the non-compliant rules and one to list them. This can be found under Settings > Computer Management. In the “Computer Management–Management Framework” section, click Extension Attributes  > New.
@@ -195,9 +195,9 @@ This could get quite tedious and error prone. Fortunately Bob Gelder has written
 
 Notice that I'm pointing it not at my baseline but at a different YAML file. If you point it at your baseline you will get a lot of rules and a large JSON file (for me it was just over 60 rules and just over 1600 lines of JSON). I created a copy of the file with `_exempt` added to the name then went through the file and deleted any rule that I knew  would never be exempted. That gave me a third of the rules and a third of the size for my JSON file. The downside is that you need to manually change the file name, and the title and description at the top of the file by removing the `_exempt`. Here's what that looks like in Jamf. 
 
-![Exempt1](exempt1.png)
-![Exempt2](exempt2.png)
-![Exempt3](exempt3.png =300x)
+![Exempt1 image](exempt1.png)
+![Exempt2 image](exempt2.png)
+![Exempt3 image](exempt3.png =300x)
 
 Notice how when we change a rule to "Configured" and set "Exempt" to "true" the interface adds a field for a reason to exempt the rule. Then further down you can see what a rule looks like before you do anything to it. Having this in the Jamf GUI is incredibly useful.
 #### Conclusion
