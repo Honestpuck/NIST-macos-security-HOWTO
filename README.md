@@ -199,6 +199,9 @@ Notice that I'm pointing it not at my baseline but at a different YAML file. If 
 ![Exempt2](exempt2.png)
 ![Exempt3](exempt3.png =300x)
 
+Notice how when we change a rule to "Configured" and set "Exempt" to "true" the interface adds a field for a reason to exempt the rule. Then further down you can see what a rule looks like before you do anything to it. Having this in the Jamf GUI is incredibly useful.
 #### Conclusion
 
 That's an explanation for how __I__ use the NIST macos_security project. I hope you found it useful for building _your_ security system. Keep an eye out for changes as I try to improve things. Feedback of any kind would be appreciated.
+
+Before I go I'd like to thank Stephen Corbiaux for field testing an early version of this HOWTO.
