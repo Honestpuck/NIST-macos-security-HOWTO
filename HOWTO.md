@@ -64,7 +64,7 @@ Now go through the rules a second time.
 
 Some of the rules you can't set it in the Jamf GUI but you can set with a custom settings upload. For these create a separate config profile titled with the number and name of the rule. 
 
-An example of this would be the rule I have, "7.06 Enable Firewall Logging". You can see in the "Remediation Description" that we should create a config profile and the payload is `com.apple.security.firewall`. Look in the directory `build\cis_lvl2_puck\mobileconfigs\preferences` for a file with the same name as the payload. Create the profile "7.0.6 Enable Firewall Logging" and in the section "Application & Custom Settings" add an "Upload". The "Preference Domain" is the name of our file (minus the ".plist") and the contents of the file is copied in to the "Property List" field. Save the profile.
+An example of this would be the rule I have, "7.06 Enable Firewall Logging". You can see in the "Remediation Description" that we should create a config profile and the payload is `com.apple.security.firewall`. Look in the directory `build\cis_lvl2_puck\mobileconfigs\preferences` for a file with the same name as the payload. Create the profile "7.0.6 Enable Firewall Logging" and in the section "Application & Custom Settings" add an "Upload". The "Preference Domain" is the name of our file (minus the ".plist") and the contents of the file is copied into the "Property List" field. Save the profile.
 
 This is the last of the truly tedious stuff.
 
@@ -125,10 +125,11 @@ It should be said that the compliance script contains a method for finding the c
 Now for a Smart Group that looks at the audit count.
 - Name: CIS v2 - Non-compliant
 - Criteria: EA cis v2 - Audit Count > 0
-
+#####
+![Smart Group](smartgroup.png)
 ##### Policies
 
-We want three policies. The first one run is "CISv2 Fix". It runs at enrollment complete and with a custom trigger of `cis_fix`. Then we have "CISv2 Check" which runs at Check-in and has a custom trigger of `cis_check`. These two policies run the compliance script. One with `--check` in the options while the other has `--fix`
+We want three policies. The first one run is "CISv2 Fix". It runs at enrollment complete and with a custom trigger of `cis_fix`. Then we have "CISv2 Check" which runs at Check-in and has a custom trigger of `cis_check`. These two policies run the compliance script. `cis_check` has `--check` in the options while the other has `--fix`
 
 Our final policy, "CISv2 Fix Controller", runs at Check-in and is scoped to "CIS v2 Non-compliant". This policy runs a script:
 ```
@@ -151,11 +152,14 @@ jamf policy -event cis_check
 jamf recon
 ```
 
-In my SOE I use `/Library/Management` as a place for all the bits and pieces I use such as the  company logo. If you use a different spot use that.
+In my SOE I use `/Library/Management` as a place for all the bits and pieces I use such as the company logo. If you use a different spot use that.
 
 The first half of the script logs the date and a list of the non-compliant rules to a text file. We can read `/Library/Management/cisfixlog.txt` in an EA if we want. Having this makes security happy as you are logging every breach.
 
 The second half is running `jamf` three times. You can see that we run the remediation, then run the check again. This check *should* pick up that the Mac is now compliant and write that out to our audit plist. Now a `jamf recon` will update our two EAs by making them run again. That means the Mac is no longer a member of our smart group.
+
+##### _Our policy list_
+![three policies in the policy list](policylist.png)
 ##### Testing
 
 For preliminary testing I turn on Self Service for the three policies. I also edit any other security policies and set them to exclude our test group, we want to be sure we get a clean test.
