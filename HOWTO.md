@@ -24,7 +24,7 @@ Now there will be a PDF file in `build/cis_lvl2` called `cis_lvl2.pdf`
 
 Go through this file and write down the rule number and title for all the rules you don't think are needed in your organisation. At my company we decided "7.21 Enable Show All Filename Extensions" would confuse users. There may be others, CIS level 2 is a tight benchmark.
 
-Take this list and the PDF file and get Security to check if they are fine with your changes to the baseline.
+Take this list and the PDF file and get Security to check if they are fine with the baseline and your changes to it. (It might be best to ask them if they have a baseline they recommend _before_ you do anything but I forgot that step.)
 
 #### Now On To Building
 
@@ -189,4 +189,8 @@ This preference file is for 'special cases'. It has a list of all the rules and 
 	</dict>
 ```
 
-What if we had a number of Mac Minis used as an XCode build cluster. They're hiding in a server room without monitors or keyboards so it might be safe to power them up and log in automatically after a power outage. So we change that `<false/>` to `<true/>` and upload the preference file exactly the same way we did other config profiles. Scope that preference file to the build Minis and we have handled our 'special case'
+What if we had a number of Mac Minis used as an XCode build cluster. They're hiding in a server room without monitors or keyboards so it might be safe to power them up and log in automatically after a power outage. So we change that `<false/>` to `<true/>` and upload the preference file exactly the same way we did other config profiles. Scope that preference file to the build Minis and we have handled our 'special case'.
+
+This could get quite tedious and error prone. Fortunately Bob Gelder has written a script `generate_json.py` that will generate the JSON of a custom schema that can be uploaded to Jamf. You can find it at https://github.com/boberito/mscp_jamf/blob/main/generate_json.py. Put that in the `scripts` folder of the project and run it from the top of the project: `~/work/macos_security $ ./scripts/generate_json.py custom/cis_lvl2_puck_exempt.yaml`
+
+Notice that I'm pointing it not at my baseline but at a different YAML file. If you point it at your baseline you will get a lot of rules and a large JSON file (for me it was just over 60 rules and just over 1600 lines of JSON). I created a copy of the file with `_exempt` added to the name then went through the file and deleted any rule that I knew  would never be exempted. That gave me a third of the rules and a third of the size for my JSON file.
