@@ -203,4 +203,4 @@ Notice how when we change a rule to "Configured" and set "Exempt" to "true" the 
 
 That's an explanation for how __I__ use the NIST macos_security project. I hope you found it useful for building _your_ security system. Keep an eye out for changes as I try to improve things. Feedback of any kind would be appreciated.
 
-Before I go I'd like to thank Stephen Corbiaux for field testing an early version of this HOWTO and @golby for correcting some errors in setup.
+Before I go I'd like to thank Stephen Corbiaux for field testing an early version of this HOWTO and Allen Golbig for correcting some errors in setup.
