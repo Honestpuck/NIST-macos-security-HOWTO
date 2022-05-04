@@ -139,7 +139,7 @@ Our final policy, "CISv2 Fix Controller", runs at Check-in and is scoped to "CIS
 # write to fix log
 echo $(date) >> /Library/Management/cisfixlog.txt
 /usr/libexec/PlistBuddy -c "Print" /Library/Preferences/org.cis_lvl2_puck.audit.plist | \
-	grep -B 1 "finding = true" ) >> /Library/Management/cisfixlog.txt
+	grep -B 1 "finding = true" >> /Library/Management/cisfixlog.txt
     
 # do the fix
 jamf policy -event cis_fix ; 
