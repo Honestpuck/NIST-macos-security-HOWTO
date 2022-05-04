@@ -191,6 +191,14 @@ This preference file is for 'special cases'. It has a list of all the rules and 
 
 What if we had a number of Mac Minis used as an XCode build cluster. They're hiding in a server room without monitors or keyboards so it might be safe to power them up and log in automatically after a power outage. So we change that `<false/>` to `<true/>` and upload the preference file exactly the same way we did other config profiles. Scope that preference file to the build Minis and we have handled our 'special case'.
 
-This could get quite tedious and error prone. Fortunately Bob Gelder has written a script `generate_json.py` that will generate the JSON of a custom schema that can be uploaded to Jamf. You can find it at https://github.com/boberito/mscp_jamf/blob/main/generate_json.py. Put that in the `scripts` folder of the project and run it from the top of the project: `~/work/macos_security $ ./scripts/generate_json.py custom/cis_lvl2_puck_exempt.yaml`
+This could get quite tedious and error prone. Fortunately Bob Gelder has written a script, `generate_json.py`, that will generate the JSON of a custom schema that can be uploaded to Jamf. You then end up with a config profile that allows you to easily turn rules on and off. You can find it at https://github.com/boberito/mscp_jamf/blob/main/generate_json.py. Put that in the `scripts` folder of the project and run it from the top of the project: `~/work/macos_security $ ./scripts/generate_json.py custom/cis_lvl2_puck_exempt.yaml`
 
-Notice that I'm pointing it not at my baseline but at a different YAML file. If you point it at your baseline you will get a lot of rules and a large JSON file (for me it was just over 60 rules and just over 1600 lines of JSON). I created a copy of the file with `_exempt` added to the name then went through the file and deleted any rule that I knew  would never be exempted. That gave me a third of the rules and a third of the size for my JSON file.
+Notice that I'm pointing it not at my baseline but at a different YAML file. If you point it at your baseline you will get a lot of rules and a large JSON file (for me it was just over 60 rules and just over 1600 lines of JSON). I created a copy of the file with `_exempt` added to the name then went through the file and deleted any rule that I knew  would never be exempted. That gave me a third of the rules and a third of the size for my JSON file. The downside is that you need to manually change the file name, and the title and description at the top of the file by removing the `_exempt`. Here's what that looks like in Jamf. (Apologies that it's in 3 shots but I don't have a monitor tall enough.)
+
+![Exempt1](exempt1.png)
+![Exempt2](exempt2.png)
+![Exempt3](exempt3.png =300x)
+
+#### Conclusion
+
+That's an explanation for how __I__ use the NIST macos_security project. I hope you found it useful for building _your_ security system. Keep an eye out for changes as I try to improve things. Feedback of any kind would be appreciated.
