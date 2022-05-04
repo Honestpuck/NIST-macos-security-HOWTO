@@ -89,7 +89,7 @@ Now go create a script in Jamf Pro. This can be found under Settings > Computer 
 - Use the Options pane to set the Parameter 4 label to `Options (--check, --fix, --stats, --compliant, --non_compliant)`.
 ##### _The 'Options' pane of our script_
 
-![Script](compliance.png =600x)
+![Script](compliance.png)
 
 ##### More Pieces
 
