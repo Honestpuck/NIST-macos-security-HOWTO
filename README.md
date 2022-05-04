@@ -88,9 +88,7 @@ Now go create a script in Jamf Pro. This can be found under Settings > Computer 
 - Use the Script pane to paste in our compliance script “cis_lvl2_puck_compliance.sh".
 - Use the Options pane to set the Parameter 4 label to `Options (--check, --fix, --stats, --compliant, --non_compliant)`.
 ##### _The 'Options' pane of our script_
-
-![Script](compliance.png =400x)
-
+![Script](compliance.png)
 ##### More Pieces
 
 Next we create two Extension Attributes in Jamf Pro, one to count the non-compliant rules and one to list them. This can be found under Settings > Computer Management. In the “Computer Management–Management Framework” section, click Extension Attributes  > New.
@@ -128,7 +126,7 @@ Now for a Smart Group that looks at the audit count.
 - Name: CIS v2 - Non-compliant
 - Criteria: EA cis v2 - Audit Count > 0
 #####
-![Smart Group](smartgroup.png =600x)
+![Smart Group](smartgroup.png)
 ##### Policies
 
 We want three policies. The first one run is "CISv2 Fix". It runs at enrollment complete and with a custom trigger of `cis_fix`. Then we have "CISv2 Check" which runs at Check-in and has a custom trigger of `cis_check`. These two policies run the compliance script. `cis_check` has `--check` in the options while the other has `--fix`
@@ -199,7 +197,7 @@ Notice that I'm pointing it not at my baseline but at a different YAML file. If 
 
 ![Exempt1](exempt1.png)
 ![Exempt2](exempt2.png)
-![Exempt3](exempt3.png =300x)
+![Exempt3](exempt3.png)
 
 Notice how when we change a rule to "Configured" and set "Exempt" to "true" the interface adds a field for a reason to exempt the rule. Then further down you can see what a rule looks like before you do anything to it. Having this in the Jamf GUI is incredibly useful.
 #### Conclusion
