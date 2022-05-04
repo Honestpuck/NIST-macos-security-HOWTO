@@ -5,7 +5,7 @@ In this document I will show how to use the NIST tool chain with the CIS level 2
 
 #### Grab the Tools
 
-Go in to whatever directory you store your git repositories and `git clone git@github.com:usnistgov/macos_security` to pull down the latest version of the toolset. Then you will need some gems. `bundle install` will grab everything required.
+Go in to whatever directory you store your git repositories and `git clone git@github.com:usnistgov/macos_security` to pull down the latest version of the toolset. Then you will need some gems, `bundle install` will grab everything required. Finally some Python requirements, `pip3 install -r requirements.txt --user`. (You could check https://github.com/usnistgov/macos_security/wiki/Getting-Started to see if anything has changed.)
 
 #### Before You Build
 
