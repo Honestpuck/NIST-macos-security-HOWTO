@@ -89,7 +89,7 @@ Now go create a script in Jamf Pro. This can be found under Settings > Computer 
 - Use the Options pane to set the Parameter 4 label to `Options (--check, --fix, --stats, --compliant, --non_compliant)`.
 ##### _The 'Options' pane of our script_
 
-![Script](compliance.png =600x)
+![Script](compliance.png =400x)
 
 ##### More Pieces
 
@@ -128,7 +128,7 @@ Now for a Smart Group that looks at the audit count.
 - Name: CIS v2 - Non-compliant
 - Criteria: EA cis v2 - Audit Count > 0
 #####
-![Smart Group](smartgroup.png)
+![Smart Group](smartgroup.png =600x)
 ##### Policies
 
 We want three policies. The first one run is "CISv2 Fix". It runs at enrollment complete and with a custom trigger of `cis_fix`. Then we have "CISv2 Check" which runs at Check-in and has a custom trigger of `cis_check`. These two policies run the compliance script. `cis_check` has `--check` in the options while the other has `--fix`
