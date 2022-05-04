@@ -90,6 +90,7 @@ Now go create a script in Jamf Pro. This can be found under Settings > Computer 
 ##### _The 'Options' pane of our script_
 
 ![Script](compliance.png =600x)
+
 ##### More Pieces
 
 Next we create two Extension Attributes in Jamf Pro, one to count the non-compliant rules and one to list them. This can be found under Settings > Computer Management. In the “Computer Management–Management Framework” section, click Extension Attributes  > New.
