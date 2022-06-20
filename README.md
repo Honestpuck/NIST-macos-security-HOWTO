@@ -98,17 +98,14 @@ Next we create two Extension Attributes in Jamf Pro, one to count the non-compli
 ```
 #!/bin/zsh
 
-# cis v2 - Audit List
+#!/bin/bash
 
-echo "<result>"
-/usr/libexec/PlistBuddy -c "Print" /Library/Preferences/org.cis_lvl2_puck.audit.plist |\
-  grep -B 1 "finding = true"`
-echo "</result>"
-```
-- Set the Data type to Integer
-- Set the Input type to Script
-- Paste the script section in the editor and save
-```
+AUDIT_LIST=$(/usr/libexec/PlistBuddy -c "Print" /Library/Preferences/org.cis_lvl2_puck.audit.plist | grep -B 1 "finding = true")
+AUDIT_LIST_NEAT=$(echo "$AUDIT_LIST" | sed -n '/finding = true/!p' | sed -n '/--/!p' | cut -f1 -d"=" | column -t)
+
+echo "<result>$AUDIT_LIST_NEAT</result>"
+
+exit 0
 #!/bin/zsh
 
 # cis v2 - Audit Count
